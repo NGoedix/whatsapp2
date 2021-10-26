@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="WhatsUp 2">
+    
+    <title>WhatsUp 2</title>
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+
+    <script>
+      let HOST = location.origin.replace(/^http/, 'ws')
+      let ws = new WebSocket(HOST);
+      let localId;
+
+      ws.onmessage = (event) => {
+        var data = JSON.parse(event.data);
+
+        var type = data.type;
+
+        if (type == "alert") {
+          alert(data.message);
+          return;
+        } else if(type == "error" && data.from == "server") {
+          alert("Error: " + data.message);
+          return;
+          
+        } else if(type == "logged") {
+          
+          var userId = data.id;
+
+          var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
+
+          var scrollbar = document.getElementById('chat-content');
+          var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
+
+          $('#userList').append('<li id="user-' + userId + '">' + fromUser + '</li>');
+          $('#chat-content').append('<div id="chat-log"><p>' + fromUser + ' se ha conectado.</p></div>');
+          if (scroll) Autoscroll();
+          return;
+          
+        } else if (type == "logout") {
+
+          var userId = data.id;
+          console.log(userId)
+          var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
+         
+          //Auto Scroll
+          var scrollbar = document.getElementById('chat-content');
+          var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
+
+          $('#userList').children('#user-' + userId)[0].remove();
+          $('#chat-content').append('<div id="chat-log"><p>' + fromUser + ' se ha desconectado :(</p></div>');
+
+          if(scroll) Autoscroll();
+          return;
+
+        } else {
+          //Mensaje normal
+          var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
+
+          var messageFrom = (data.from).toLowerCase() == user.toLowerCase() ? "message-me" : "message-external";
+
+          var scrollbar = document.getElementById('chat-content');
+
+          //Colocar mensaje
+          var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
+          var content = $('#chat-content').append('<div id="' + messageFrom + '"><p id="' + messageFrom + '-name"> ' + fromUser + ' </p><p id="' + messageFrom + '-content">' + data.message + '</p></div>');
+          if(scroll) Autoscroll();
+        }
+      };
+
+      function Autoscroll() {
+        var scrollbar = document.getElementById('chat-content');
+        
+        scrollbar.scrollTop = scrollbar.scrollHeight;
+      }
+
+      //Enter = Enviar mensaje && Shift enter = Salto de linea
+      $(function() {
+        $("#messageArea").keypress(function(event) {
+          var keycode = (event.keyCode ? event.keyCode : event.which);
+        
+          if ((event.keyCode == 13 || event.keyCode == 10) && event.shiftKey) {
+            var value = $('#messageArea').val();
+            $('#messageArea').val(value + "\n");
+            return false;
+          } else if (event.keyCode == 13 || event.keyCode == 10) {
+            sendMessage();
+            return false;
+          }
+        });
+      })
+
+      //Función al enviar mensajes.
+      function sendMessage() {
+        var input = $('#messageArea').val();
+        var typeMsg = "msg";
+        var originalMsg = '';
+
+        if(input.trim() != '') {
+          //Checkeamos que tipo de mensaje es | Validado también en backend
+          if(input.search("#alert") == 0) {
+            typeMsg = "alert";
+            originalMsg = input.substr(6);
+          } else if (input.search("#kick") == 0) {
+            typeMsg = "kick";
+            originalMsg = input.substr(5);
+          } else {
+            typeMsg = "msg";
+            originalMsg = input;
+          }
+
+          var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
+          ws.send(msg);
+          $('#messageArea').val('');
+        } else {
+          //En caso de que el mensaje contenga espacios se vacía el cuadro.
+          $('#messageArea').val('');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!--Nav header of the page.-->
+    <nav class="navbar navbar-dark bg-dark">
+      <li class="logo"><img alt="WhatsUp 2 Logo" src="icons/logo.png" /></li>
+      <li><a href="index"><button class="btn btn-outline-primary">Mensajes</button></a></li>
+      <li><a href="#"><button class="btn btn-outline-primary">Pase de batalla</button></a></li>
+      <li><a href="#"><button class="btn btn-outline-primary">Tienda</button></a></li>
+      <li>
+        <img src="" alt="Foto de perfil">
+        <a href="#"><button class="btn btn-outline-primary">Perfil</button></a>
+      </li>
+      <!--<li class="hidden-xs hidden-sm">
+        <a href="#"><button class="btn btn-outline-primary">Información</button></a>
+      </li>-->
+    </nav>
+
+    <!--Main content of the page.-->
+    <div class="flex-container">
+      <div id="chats"></div>
+
+      <div id="messages-main">
+        <div id="chat-header">
+          <p id="chat-name">CHAT GENERAL</p>
+        </div>
+
+        <!--Messages-->
+        <div id="chat-content">
+          <div id="chat-logged"><p></p></div>
+        </div>
+
+        <footer class="chat-footer">
+          <button id="emojisBtn">&#128514;</button>
+          <textarea id="messageArea" class="form-control" placeholder="Escribe aquí tu mensaje..."></textarea>
+          <button onclick="sendMessage();" id="sendMessageBtn" type="submit" tabindex="-1"><i class="fa fa-paper-plane sendIcon" aria-hidden="true"></i></button>
+        </footer>
+      </div>
+
+      <div id="chat-info">
+        <p style="border-bottom: 1px solid black;">Usuarios conectados</p>
+        <ul id="userList"></ul>
+      </div>
+    </div>
+    
+    <script>
+      //Esto es temporal hasta que esté a base de datos
+      //Reconocimiento de usuario | Futuramente esto será a través de la base de datos y será mucho más seguro, ahora tiene errores de seguridad.
+      var user = prompt("¿Quién eres?");
+      
+      while (user == null) {
+        user = prompt("Nombre inválido, repite el nick.");
+      }
+
+      user = user.replace(/<[^>]+>/g, '');
+      
+      //Check de user not empty FRONT | Futuramente será a través del registro.
+      while(user.trim() == "" || user.search('"') != -1) {
+        user = prompt("Nombre inválido, repite el nick.")
+      }
+
+      $('document').ready(function() {
+        var msg = JSON.stringify({from: user, type: "login"})
+        ws.send(msg);
+      });
+      
+    </script>
+  </body>
+</html>

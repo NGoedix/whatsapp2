@@ -12,6 +12,7 @@
   "dependencies": {
     "bufferutil": "^4.0.5",
     "express": "^4.17.1",
+    "socket.io": "^4.3.1",
     "utf-8-validate": "^5.0.7",
     "websockets": "^0.2.0",
     "ws": "^8.2.3"
