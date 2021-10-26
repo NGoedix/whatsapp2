@@ -96,3 +96,7 @@ function sendMessage(msg) {
     client.send(msg);
   });
 }
+
+setInterval(() => {
+  sendMessage(1);
+}, 1000);

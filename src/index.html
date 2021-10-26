@@ -26,7 +26,7 @@
           alert(data.message);
           return;
         } else if(type == "error" && data.from == "server") {
-          alert("Error: " + msg.message);
+          alert("Error: " + data.message);
           return;
           
         } else if(type == "logged") {
