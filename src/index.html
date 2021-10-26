@@ -20,6 +20,8 @@
       ws.onmessage = (event) => {
         var data = JSON.parse(event.data);
 
+        if(data == 1) return;
+
         var type = data.type;
 
         if (type == "alert") {
