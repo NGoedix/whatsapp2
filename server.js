@@ -1,5 +1,8 @@
 const express = require('express');
 const { Server } = require('ws');
+var MarkdownIt = require('markdown-it'),
+
+md = new MarkdownIt();
 
 const PORT = process.env.PORT || 3000;
 const INDEX = 'src/index.html';
@@ -78,8 +81,9 @@ wss.on('connection', (ws, username, localId) => {
       });
 
     } else if (type == "login") {
-      username = (data.from).replace(/<[^>]+>/g, '');
-      username = username.replace('</', '')
+      username = data.from
+      username = username.replace(/<[^>]+>/g, '');
+      username = username.replace(/<\//g, '')
 
       userData = JSON.stringify({client: ws, id: localId, username: username})  
       users.push(userData);
@@ -90,11 +94,12 @@ wss.on('connection', (ws, username, localId) => {
     } else if (type == "msg" && (data.from).toLowerCase() != "server") {
 
       var cleanText = (data.message).replace(/<[^>]+>/g, '');
-      cleanText = cleanText.replace('</', '')
+      cleanText = cleanText.replace(/<\//g, '')
       if (cleanText.trim() == '') return;
-      cleanText = cleanText.replace("\n", "<br />")
+      cleanText = cleanText.replace(/\n/g, "<br />")
+      var result = md.render(cleanText);
 
-      var message = JSON.stringify({from: username, message: cleanText, type: type})
+      var message = JSON.stringify({from: username, message: result, type: type})
       sendMessage(message);
       
     } else {
