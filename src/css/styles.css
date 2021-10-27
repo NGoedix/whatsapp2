@@ -156,13 +156,14 @@ img {
 #userList {
     font-weight: 400;
     padding: 0;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 #message-external {
     margin-left: 5%;
     width: 100%;
-    word-break: break-all;
+    text-align: justify;
+    word-break: break-word;
 }
 
 #message-external-name {
@@ -175,7 +176,6 @@ img {
     clear: left;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    
 }
 
 #message-external-content {
@@ -194,7 +194,8 @@ img {
     margin-right: 5%;
     width: 100%;
     float: right;
-    word-break: break-all;
+    text-align: justify;
+    word-break: break-word;
 }
 
 #message-me-name {
@@ -225,7 +226,7 @@ img {
     display: flex;
     justify-content: center;
     width: 100%;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 #chat-log p {

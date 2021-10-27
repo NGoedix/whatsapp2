@@ -34,7 +34,6 @@
         } else if(type == "logged") {
           
           var userId = data.id;
-          console.log(data)
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
 
           var scrollbar = document.getElementById('chat-content');
@@ -48,7 +47,6 @@
         } else if (type == "logout") {
 
           var userId = data.id;
-          console.log(userId)
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
          
           //Auto Scroll
@@ -65,6 +63,7 @@
           //Mensaje normal
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
 
+          console.log((data.from).toLowerCase() + "\n" + user.toLowerCase())
           var messageFrom = (data.from).toLowerCase() == user.toLowerCase() ? "message-me" : "message-external";
 
           var scrollbar = document.getElementById('chat-content');
@@ -182,10 +181,13 @@
       }
 
       user = user.replace(/<[^>]+>/g, '');
+      user = user.replace('</', '')
       
       //Check de user not empty FRONT | Futuramente será a través del registro.
       while(user.trim() == "" || user.search('"') != -1) {
         user = prompt("Nombre inválido, repite el nick.")
+        user = user.replace(/<[^>]+>/g, '');
+        user = user.replace('</', '')
       }
 
       $('document').ready(function() {

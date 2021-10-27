@@ -53,15 +53,15 @@ wss.on('connection', (ws, username, localId) => {
     var type = data.type;
     if (!type) return;
 
-    if (type == "alert") {
+    if (type == "alert") { // {from: username, id: objetiveID, type: kick}
 
       if (data.from != "Goedix") return;
 
       var message = JSON.stringify({from: data.from, message: data.message, type: type})
       sendMessage(message)
 
-    } else if (type == "kick") {
-
+    } else if (type == "kick") { // {from: username, id: objetiveID, type: kick}
+      
       if(data.from != "Goedix") return;
 
       //Buscamos el usuario a kickear y lo echamos.
@@ -77,11 +77,10 @@ wss.on('connection', (ws, username, localId) => {
 
     } else if (type == "login") {
       username = (data.from).replace(/<[^>]+>/g, '');
+      username = username.replace('</', '')
 
       userData = JSON.stringify({client: ws, id: localId, username: username})  
       users.push(userData);
-
-      console.log(username + " tiene de id: " + localId)
 
       var login = JSON.stringify({from: username, id: localId, type: "logged"})
       sendMessage(login);
@@ -89,7 +88,9 @@ wss.on('connection', (ws, username, localId) => {
     } else if (type == "msg" && (data.from).toLowerCase() != "server") {
 
       var cleanText = (data.message).replace(/<[^>]+>/g, '');
+      cleanText = cleanText.replace('</', '')
       if (cleanText.trim() == '') return;
+      cleanText = cleanText.replace("\n", "<br />")
 
       var message = JSON.stringify({from: username, message: cleanText, type: type})
       sendMessage(message);
