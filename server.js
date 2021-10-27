@@ -66,10 +66,12 @@ wss.on('connection', (ws, username, localId) => {
 
       //Buscamos el usuario a kickear y lo echamos.
       counter = 0;
+      var kicked = false;
       wss.clients.forEach((client) => {
-        if (counter == data.id) {
+        if (counter == data.id && kicked == false) {
           client.send(JSON.stringify({from: "Goedix", message: "Has sido expulsado.", type: "alert"}))
           client.close();
+          kicked = true;
           return;
         }
         counter++;
