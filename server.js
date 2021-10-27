@@ -11,22 +11,26 @@ const server = express()
 
 const wss = new Server({ server });
 
+//Identificación de usuarios
 let users = [];
-
 var id = 0;
+
 
 wss.on('connection', (ws, username, localId) => {
 
+  localId = id;
+  id++;
+
+  //Conexión de clientes y update de clientes conectados.
   console.log('[ + ] Se ha conectado un cliente.');
 
-
   for(var i = 0; i < users.length; i++) {
-    var message = JSON.stringify({from: JSON.parse(users[i]).username, message: "", type: "logged"})
+    var message = JSON.stringify({from: JSON.parse(users[i]).username, id: JSON.parse(users[i]).id, type: "logged"})
     ws.send(message);
   }
 
-
   ws.on('close', () => {
+    //Desconexión del usuario
     userData = JSON.stringify({client: ws, id: localId, username: username})
 
     for(var i = 0; i < users.length; i++) {
@@ -57,24 +61,32 @@ wss.on('connection', (ws, username, localId) => {
       sendMessage(message)
 
     } else if (type == "kick") {
-      //Tengo que cambiar el login para que se identifique a los usuarios bien.
+
+      if(data.from != "Goedix") return;
+
+      //Buscamos el usuario a kickear y lo echamos.
+      counter = 0;
+      wss.clients.forEach((client) => {
+        if (counter == data.id) {
+          client.send(JSON.stringify({from: "Goedix", message: "Has sido expulsado.", type: "alert"}))
+          client.close();
+          return;
+        }
+        counter++;
+      });
 
     } else if (type == "login") {
       username = (data.from).replace(/<[^>]+>/g, '');
-
-      localId = id;
-      id++;
 
       userData = JSON.stringify({client: ws, id: localId, username: username})  
       users.push(userData);
 
       console.log(username + " tiene de id: " + localId)
 
-      var message = JSON.stringify({from: username, id: localId, type: "logged"})
-      sendMessage(message);
+      var login = JSON.stringify({from: username, id: localId, type: "logged"})
+      sendMessage(login);
 
     } else if (type == "msg" && (data.from).toLowerCase() != "server") {
-
 
       var cleanText = (data.message).replace(/<[^>]+>/g, '');
       if (cleanText.trim() == '') return;

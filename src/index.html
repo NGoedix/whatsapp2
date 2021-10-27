@@ -34,7 +34,7 @@
         } else if(type == "logged") {
           
           var userId = data.id;
-
+          console.log(data)
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
 
           var scrollbar = document.getElementById('chat-content');
@@ -109,15 +109,17 @@
           if(input.search("#alert") == 0) {
             typeMsg = "alert";
             originalMsg = input.substr(6);
+            var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
           } else if (input.search("#kick") == 0) {
             typeMsg = "kick";
             originalMsg = input.substr(5);
+            var msg = JSON.stringify({from: user, id: input.substr(6), type: typeMsg})
           } else {
             typeMsg = "msg";
             originalMsg = input;
+            var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
           }
-
-          var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
+          
           ws.send(msg);
           $('#messageArea').val('');
         } else {
