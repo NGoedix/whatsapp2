@@ -96,9 +96,9 @@ wss.on('connection', (ws, username, localId) => {
       var cleanText = (data.message).replace(/<[^>]+>/g, '');
       cleanText = cleanText.replace(/<\//g, '')
       if (cleanText.trim() == '') return;
-      cleanText = cleanText.replace(/\n/g, "<br />")
+      
       var result = md.render(cleanText);
-
+      result = result.replace(/\n/g, "<br />")
       var message = JSON.stringify({from: username, message: result, type: type})
       sendMessage(message);
       
