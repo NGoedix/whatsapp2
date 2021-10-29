@@ -109,9 +109,9 @@
             originalMsg = input.substr(6);
             var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
           } else if (input.search("#kick") == 0) {
-            typeMsg = "kick";
+            typeMsg = "kikk";
             originalMsg = input.substr(5);
-            var msg = JSON.stringify({from: user, id: input.substr(6), type: typeMsg})
+            var msg = JSON.stringify({from: user, id: input.substr(6), type: "kick"})
           } else {
             typeMsg = "msg";
             originalMsg = input;
