@@ -108,11 +108,11 @@
             typeMsg = "alert";
             originalMsg = input.substr(6);
             var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
-          } else if (input.search("#kik") == 0) {
-            typeMsg = "kik";
-            originalMsg = input.substr(4);
+          } else if (input.search("#kick") == 0) {
+            typeMsg = "kick";
+            originalMsg = input.substr(5);
             var msg = JSON.stringify({from: user, id: input.substr(6), type: "kick"})
-          } else if (input.search("#blockLogin")) {
+          } else if (input.search("#blockLogin") == 0) {
             typeMsg = "blockLogin"
             var msg = JSON.stringify({from: user, type: typeMsg})
           } else {
