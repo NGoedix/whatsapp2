@@ -1,5 +1,5 @@
 module.exports = function (wss, from, id) {
-    if(from != "Goedix") return;
+    if(from != "goedix123") return;
 
     counter = 0;
     var kicked = false;
