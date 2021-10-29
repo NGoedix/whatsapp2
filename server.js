@@ -4,15 +4,10 @@ const { Server } = require('ws');
 var MarkdownIt = require('markdown-it');
 md = new MarkdownIt();
 
-const sendMessage = require('./actions/sendMessage')
 const ping = require('./actions/ping');
-const kickClient = require('./actions/kickClient');
-const sendLogin = require('./actions/sendLogin')
-const alertClients = require('./actions/alertClients');
-const errorAlert = require('./actions/errorAlert');
-const sendLogout = require('./actions/sendLogout');
-
-var escape = require('escape-html');
+const sendLogout = require('./actions/messages/sendLogout');
+const messageHandler = require('./actions/messageHandler');
+const sendLogin = require('./actions/messages/sendLogin');
 
 const PORT = process.env.PORT || 3000;
 const INDEX = 'src/index.html';
@@ -27,8 +22,14 @@ const wss = new Server({ server });
 //Identifaction of users
 let users = [];
 var id = 0;
+var blockLogin = false;
 
 wss.on('connection', (ws, username, localId) => {
+
+  if (blockLogin) {
+    ws.send(JSON.stringify({from: "server", message: "El login está desactivado.", type: "alert"}))
+    ws.close();
+  }
 
   console.log('[ + ] Se ha conectado un cliente.');
 
@@ -55,18 +56,11 @@ wss.on('connection', (ws, username, localId) => {
   });
 
   ws.onmessage = function (event) {
-    var data = JSON.parse(event.data);
-    var type = data.type;
 
-    if (!type) return;
+    data = JSON.parse(event.data)
+    type = data.type
 
-    if (type == "alert") {      
-      alertClients(wss, data.from, data.message)
-
-    } else if (type == "kick") {
-      kickClient(wss, data.from, data.id)
-
-    } else if (type == "login") {
+    if (type == "login") {
       //Escape HTML
       username = escape(data.from);
 
@@ -75,13 +69,12 @@ wss.on('connection', (ws, username, localId) => {
       users.push(userData);
       
       sendLogin(wss, username, localId);
-
-    } else if (type == "msg" && (username).toLowerCase() != "server") {
-      sendMessage(wss, username, data.message)
-
+      return;
+    } else if (type == "blockLogin") {
+      blockLogin = !blockLogin;
+      return;
     } else {
-      errorAlert(ws)
-
+      messageHandler(wss, username, JSON.parse(event.data));
     }
   }
 });

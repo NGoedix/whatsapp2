@@ -63,7 +63,6 @@
           //Mensaje normal
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
 
-          console.log((data.from).toLowerCase() + "\n" + user.toLowerCase())
           var messageFrom = (data.from).toLowerCase() == user.toLowerCase() ? "message-me" : "message-external";
 
           var scrollbar = document.getElementById('chat-content');

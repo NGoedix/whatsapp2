@@ -1,4 +1,4 @@
-const send = require("./send");
+const send = require("../messages/send");
 
 module.exports = function (clients, from, alert) {
     if (from != "Goedix") return;
