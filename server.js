@@ -81,7 +81,7 @@ wss.on('connection', (ws, username, localId) => {
       blockLogin = !blockLogin;
       return;
     } else {
-      messageHandler(wss, username, JSON.parse(event.data));
+      messageHandler(wss, ws, username, JSON.parse(event.data));
     }
   }
 });

@@ -4,11 +4,8 @@ var alertClients = require('../actions/alert/alertClients')
 var errorAlert = require('../actions/alert/errorAlert')
 
 var sendMessage = require('../actions/messages/sendMessage')
-var sendLogin = require('../actions/messages/sendLogin')
 
-var escape = require('escape-html');
-
-module.exports = function (wss, username, data) {
+module.exports = function (wss, client, username, data) {
 
     var type = data.type;
     
@@ -24,6 +21,6 @@ module.exports = function (wss, username, data) {
       sendMessage(wss, username, data.message);
 
     } else {
-      errorAlert(ws);
+      errorAlert(client);
     }
 }
