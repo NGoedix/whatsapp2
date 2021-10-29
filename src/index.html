@@ -39,7 +39,7 @@
           var scrollbar = document.getElementById('chat-content');
           var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
 
-          $('#userList').append('<li id="user-' + userId + '">' + fromUser + '</li>');
+          $('#userList').append('<div class="userInList" id="user-' + userId + '"><img src="icons/user.png" width="64" height="64"><span>' + fromUser + '</span></div>');
           $('#chat-content').append('<div id="chat-log"><p>' + fromUser + ' se ha conectado.</p></div>');
           if (scroll) Autoscroll();
           return;
@@ -136,7 +136,7 @@
       <li><a href="#"><button class="btn btn-outline-primary">Pase de batalla</button></a></li>
       <li><a href="#"><button class="btn btn-outline-primary">Tienda</button></a></li>
       <li>
-        <img src="" alt="Foto de perfil">
+        <img src="icons/user.png" alt="Foto de perfil">
         <a href="#"><button class="btn btn-outline-primary">Perfil</button></a>
       </li>
       <!--<li class="hidden-xs hidden-sm">
@@ -146,7 +146,9 @@
 
     <!--Main content of the page.-->
     <div class="flex-container">
-      <div id="chats"></div>
+      <div id="chats">
+        <p>CHATS</p>
+      </div>
 
       <div id="messages-main">
         <div id="chat-header">
@@ -166,7 +168,7 @@
       </div>
 
       <div id="chat-info">
-        <p style="border-bottom: 1px solid black;">Usuarios conectados</p>
+        <p>Usuarios conectados</p>
         <ul id="userList"></ul>
       </div>
     </div>

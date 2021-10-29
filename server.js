@@ -1,8 +1,18 @@
 const express = require('express');
 const { Server } = require('ws');
-var MarkdownIt = require('markdown-it'),
 
+var MarkdownIt = require('markdown-it');
 md = new MarkdownIt();
+
+const sendMessage = require('./actions/sendMessage')
+const ping = require('./actions/ping');
+const kickClient = require('./actions/kickClient');
+const sendLogin = require('./actions/sendLogin')
+const alertClients = require('./actions/alertClients');
+const errorAlert = require('./actions/errorAlert');
+const sendLogout = require('./actions/sendLogout');
+
+var escape = require('escape-html');
 
 const PORT = process.env.PORT || 3000;
 const INDEX = 'src/index.html';
@@ -14,18 +24,16 @@ const server = express()
 
 const wss = new Server({ server });
 
-//Identificación de usuarios
+//Identifaction of users
 let users = [];
 var id = 0;
 
-
 wss.on('connection', (ws, username, localId) => {
+
+  console.log('[ + ] Se ha conectado un cliente.');
 
   localId = id;
   id++;
-
-  //Conexión de clientes y update de clientes conectados.
-  console.log('[ + ] Se ha conectado un cliente.');
 
   for(var i = 0; i < users.length; i++) {
     var message = JSON.stringify({from: JSON.parse(users[i]).username, id: JSON.parse(users[i]).id, type: "logged"})
@@ -42,80 +50,42 @@ wss.on('connection', (ws, username, localId) => {
       }
     }
 
-    message = JSON.stringify({from: username, id:localId, type: "logout"})
-    sendMessage(message);
-
+    sendLogout(wss, username, localId)
     console.log('[ - ] Se ha desconectado un cliente :(');    
   });
 
   ws.onmessage = function (event) {
-
-    if(event.data == 1) return;
-
     var data = JSON.parse(event.data);
     var type = data.type;
+
     if (!type) return;
 
-    if (type == "alert") { // {from: username, id: objetiveID, type: kick}
+    if (type == "alert") {      
+      alertClients(wss, data.from, data.message)
 
-      if (data.from != "Goedix") return;
-
-      var message = JSON.stringify({from: data.from, message: data.message, type: type})
-      sendMessage(message)
-
-    } else if (type == "kick") { // {from: username, id: objetiveID, type: kick}
-      
-      if(data.from != "Goedix") return;
-
-      //Buscamos el usuario a kickear y lo echamos.
-      counter = 0;
-      var kicked = false;
-      wss.clients.forEach((client) => {
-        if (counter == data.id && kicked == false) {
-          client.send(JSON.stringify({from: "Goedix", message: "Has sido expulsado.", type: "alert"}))
-          client.close();
-          kicked = true;
-          return;
-        }
-        counter++;
-      });
+    } else if (type == "kick") {
+      kickClient(wss, data.from, data.id)
 
     } else if (type == "login") {
-      username = data.from
-      username = username.replace(/<[^>]+>/g, '');
-      username = username.replace(/<\//g, '')
+      //Escape HTML
+      username = escape(data.from);
 
+      //Add user to the Users Connected JSON
       userData = JSON.stringify({client: ws, id: localId, username: username})  
       users.push(userData);
-
-      var login = JSON.stringify({from: username, id: localId, type: "logged"})
-      sendMessage(login);
-
-    } else if (type == "msg" && (data.from).toLowerCase() != "server") {
-
-      var cleanText = (data.message).replace(/<[^>]+>/g, '');
-      cleanText = cleanText.replace(/<\//g, '')
-      if (cleanText.trim() == '') return;
       
-      var result = md.render(cleanText);
-      var message = JSON.stringify({from: username, message: result, type: type})
-      sendMessage(message);
-      
+      sendLogin(wss, username, localId);
+
+    } else if (type == "msg" && (username).toLowerCase() != "server") {
+      sendMessage(wss, username, data.message)
+
     } else {
-      //En caso de que haya algún error se le manda al propio cliente un mensaje.
-      var message = JSON.stringify({from: "server", message: "Ha habido un problema con tu solicitud.", type: "error"})
-      ws.send(message);
+      errorAlert(ws)
+
     }
   }
 });
 
-function sendMessage(msg) {
-  //Mandamos el mensaje a todos los clientes.
-  wss.clients.forEach((client) => {
-    client.send(msg);
-  });
-}
-
 setInterval(() => {
-  sendMessage(1);
-}, 1000);
+  ping(wss);
+}, 2000);
