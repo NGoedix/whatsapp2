@@ -62,7 +62,7 @@
         } else {
           //Mensaje normal
           var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
-
+          console.log(fromUser + "\n" + user)
           var messageFrom = (data.from).toLowerCase() == user.toLowerCase() ? "message-me" : "message-external";
 
           var scrollbar = document.getElementById('chat-content');
@@ -185,7 +185,7 @@
       user = user.replaceAll('</', '')
       
       //Check de user not empty FRONT | Futuramente será a través del registro.
-      while(user.trim() == "" || user.search('"') != -1) {
+      while(user.trim() == "" || user.search(">") != -1 || user.search("<") != -1 || user.search('"') != -1) {
         user = prompt("Nombre inválido, repite el nick.")
         user = user.replaceAll(/<[^>]+>/g, '');
         user = user.replaceAll(/<\//g, '')

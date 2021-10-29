@@ -62,7 +62,14 @@ wss.on('connection', (ws, username, localId) => {
 
     if (type == "login") {
       //Escape HTML
-      username = escape(data.from);
+      username = data.from.replace(/<[^>]+>/g, '');
+      username = data.from.replace(/<\//g, '')
+      console.log(username)
+
+      if (username.trim() == "") {
+        ws.send(JSON.stringify({from: "server", message: "No puedes entrar con un username vacío.", type: "alert"}))
+        ws.close()
+      }
 
       //Add user to the Users Connected JSON
       userData = JSON.stringify({client: ws, id: localId, username: username})  
