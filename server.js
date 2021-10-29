@@ -77,7 +77,8 @@ wss.on('connection', (ws, username, localId) => {
       
       sendLogin(wss, username, localId);
       return;
-    } else if (type == "blockLogin" && data.from == "goedix123") {
+    } else if (type == "blockLogin") {
+      if (data.from != "goedix123") return;
       blockLogin = !blockLogin;
       return;
     } else {
