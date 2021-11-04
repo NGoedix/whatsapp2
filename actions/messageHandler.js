@@ -9,6 +9,8 @@ module.exports = function (wss, client, username, data) {
 
     var type = data.type;
     
+    console.log(username);
+
     if (!type) return;
 
     if (type == "alert") {      
@@ -17,7 +19,7 @@ module.exports = function (wss, client, username, data) {
     } else if (type == "kick") {
       kickClient(wss, data.from, data.id)
 
-    } else if (type == "msg" && (username).toLowerCase() != "server") {
+    } else if (type == "msg") {
       sendMessage(wss, username, data.message);
 
     } else {

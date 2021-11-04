@@ -7,21 +7,37 @@
     <title>WhatsUp 2</title>
 
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/panels.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
 
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/socket.js"></script>
   </head>
   <body>
+
+    <!--List of panels.-->
+    <div id="panel-container" style="display: none;">
+      <div id="panel" style="display: none;">
+        <div id="panelLogin" style="display: none;">
+          <div class="panelLogin-left">
+
+          </div>
+          <div class="panelLogin-right">
+            <h1>WhatsUp 2</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!--Nav header of the page.-->
     <nav class="navbar navbar-dark bg-dark">
       <li class="logo"><img alt="WhatsUp 2 Logo" src="icons/logo.png" /></li>
-      <li><a href="#"><button class="btn btn-outline-primary">Mensajes</button></a></li>
-      <li><a href="#"><button class="btn btn-outline-primary">Pase de batalla</button></a></li>
-      <li><a href="#"><button class="btn btn-outline-primary">Tienda</button></a></li>
+      <li><a href="#"><button id="navMsgButton" class="btn btn-outline-primary">Mensajes</button></a></li>
+      <li><a href="#"><button id="navPassButton" class="btn btn-outline-primary">Pase de batalla</button></a></li>
+      <li><a href="#"><button id="navShopButton" class="btn btn-outline-primary">Tienda</button></a></li>
       <li>
         <img src="icons/user.png" alt="Foto de perfil">
-        <a href="#"><button class="btn btn-outline-primary">Perfil</button></a>
+        <a href="#"><button id="navLoginButton" class="btn btn-outline-primary">Perfil</button></a>
       </li>
     </nav>
 
@@ -43,7 +59,7 @@
 
         <footer class="chat-footer">
           <button id="emojisBtn">&#128514;</button>
-          <textarea id="messageArea" class="form-control" placeholder="Escribe aquí tu mensaje..."></textarea>
+          <textarea id="messageArea" class="form-control" spellcheck="false" placeholder="Escribe aquí tu mensaje..."></textarea>
           <button onclick="sendMessage();" id="sendMessageBtn" type="submit" tabindex="-1"><i class="fa fa-paper-plane sendIcon" aria-hidden="true"></i></button>
         </footer>
       </div>
@@ -78,5 +94,7 @@
         ws.send(msg);
       });
     </script>
+
+  <script type="text/javascript" src="js/windowHandler.js"></script>
   </body>
 </html>

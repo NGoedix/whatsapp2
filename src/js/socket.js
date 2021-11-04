@@ -60,28 +60,10 @@ ws.onmessage = (event) => {
 
 //Función al enviar mensajes.
 function sendMessage() {
-var input = $('#messageArea').val();
-var typeMsg = "msg";
-var originalMsg = '';
+    var input = $('#messageArea').val();
 
-if(input.trim() != '') {
-    //Checkeamos que tipo de mensaje es | Validado también en backend
-    if(input.search("#alert") == 0) {
-        typeMsg = "alert";
-        originalMsg = input.substr(6);
-        var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
-        } else if (input.search("#kick") == 0) {
-        typeMsg = "kick";
-        originalMsg = input.substr(5);
-        var msg = JSON.stringify({from: user, id: input.substr(6), type: "kick"})
-        } else if (input.search("#blockLogin") == 0) {
-        typeMsg = "blockLogin"
-        var msg = JSON.stringify({from: user, type: typeMsg})
-        } else {
-        typeMsg = "msg";
-        originalMsg = input;
-        var msg = JSON.stringify({from: user, message: originalMsg, type: typeMsg})
-        }
+    if(input.trim() != '') {
+        var msg = JSON.stringify({from: user, message: input, type: "msg"})
         //ZAvk3n4NW5
         ws.send(msg);
         $('#messageArea').val('');

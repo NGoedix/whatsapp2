@@ -22,6 +22,10 @@ li {
     margin: 0 auto;
 }
 
+pre {
+    overflow-x: scroll;
+}
+
 nav {
     text-align: center;
     height: 10%;
