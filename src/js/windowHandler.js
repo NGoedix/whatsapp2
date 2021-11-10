@@ -1,4 +1,4 @@
-
+var texto = "Bienvenidos a esta humilde aplicación de mensajería desarrollada por Goedix para el curso de DAM 1. El objetivo de esta aplicación es tener una vía de comunicación en tiempo real con funciones nuevas.";
 // Panel's list
 var panelMain = document.getElementById("panel");
 var panelContainer = document.getElementById("panel-container");
@@ -22,6 +22,9 @@ btnShop.onclick = function() {
   panelContainer.style.display = "block";
   panelMain.style.display = "block";
   panelLogin.style.display = "block";
+  $('#typer').html('')
+  maquina("typer",texto, 100, 0);
+  console.log("HOLA");
   return;
 }
 

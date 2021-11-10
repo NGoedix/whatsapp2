@@ -12,6 +12,7 @@
 
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/socket.js"></script>
+    <script type="text/javascript" src="js/animatedText.js"></script>
   </head>
   <body>
 
@@ -20,10 +21,24 @@
       <div id="panel" style="display: none;">
         <div id="panelLogin" style="display: none;">
           <div class="panelLogin-left">
-
+            <h1>LOGIN</h1>
+            <form action="">
+              <span>Nombre de usuario</span>
+              <input id="usernameLogin" type="text" placeholder="Usuario">
+              <span>Contraseña</span>
+              <input id="passwordLogin" type="password" placeholder="Contrasenha">
+              <br />
+              <input class="logActionBtn" type="button" value="Iniciar sesión">
+            </form>
+            <div>
+              <a href="#"><span>¿Olvidaste la contraseña?</span></a>
+              <a href="#"><span>¿Todavía no tienes cuenta?</span></a>
+            </div>
           </div>
           <div class="panelLogin-right">
             <h1>WhatsUp 2</h1>
+            <p id="typer"></p>
+            </p>
           </div>
         </div>
       </div>

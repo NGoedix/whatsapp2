@@ -48,9 +48,6 @@ a:-webkit-any-link {
     font-weight: 400;
     text-align: center;
     vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     background-color: transparent;
     border: 1px solid orange;
@@ -125,12 +122,12 @@ button, [type="button"], [type="reset"], [type="submit"] {
     }
 }
   
-  .form-control::-ms-expand {
+.form-control::-ms-expand {
     background-color: transparent;
     border: 0;
 }
   
-  .form-control:focus {
+.form-control:focus {
     color: #495057;
     background-color: #fff;
     border-color: #80bdff;
@@ -138,27 +135,27 @@ button, [type="button"], [type="reset"], [type="submit"] {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
   
-  .form-control::-webkit-input-placeholder {
+.form-control::-webkit-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
   
-  .form-control::-moz-placeholder {
+.form-control::-moz-placeholder {
     color: #6c757d;
     opacity: 1;
 }
   
-  .form-control:-ms-input-placeholder {
+.form-control:-ms-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
-  
-  .form-control::-ms-input-placeholder {
+
+.form-control::-ms-input-placeholder {
     color: #6c757d;
     opacity: 1;
 }
-  
-  .form-control::placeholder {
+
+.form-control::placeholder {
     color: #6c757d;
     opacity: 1;
 }
@@ -239,6 +236,7 @@ img {
     font-weight: 900;
     flex-direction: column;
     background-color: #6d7173;
+    overflow-y: auto;
     flex: 20%;
     height: 100%;
 }
