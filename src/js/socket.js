@@ -3,12 +3,17 @@ let ws = new WebSocket(HOST);
 let localId;
 
 ws.onmessage = (event) => {
+
+    // Get the data in JSON
     var data = JSON.parse(event.data);
 
+    // Ping to evit timeout disconnect
     if(data == 1) return;
 
+    // Get the type of the socket message
     var type = data.type;
 
+    // Check the type
     if (type == "alert") {
         alert(data.message);
         return;
@@ -18,11 +23,13 @@ ws.onmessage = (event) => {
       
     } else if(type == "logged") {
         var userId = data.id;
-        var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
+        var fromUser = data.from.length > 20 ? (data.from).substr(0, 20) + "..." : data.from;
 
+        // If the scrollbar is at the bottom of the chat-content then autoscroll
         var scrollbar = document.getElementById('chat-content');
         var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
 
+        // Add user to the list and into the chat
         $('#userList').append('<div class="userInList" id="user-' + userId + '"><img src="icons/user.png" width="64" height="64"><span>' + fromUser + '</span></div>');
         $('#chat-content').append('<div id="chat-log"><p>' + fromUser + ' se ha conectado.</p></div>');
         if (scroll) Autoscroll();
@@ -31,9 +38,9 @@ ws.onmessage = (event) => {
     } else if (type == "logout") {
 
         var userId = data.id;
-        var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
+        var fromUser = data.from.length > 20 ? (data.from).substr(0, 20) + "..." : data.from;
         
-        //Auto Scroll
+        // If the scrollbar is at the bottom of the chat-content then autoscroll
         var scrollbar = document.getElementById('chat-content');
         var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
 
@@ -58,17 +65,17 @@ ws.onmessage = (event) => {
     }   
 };
 
-//Función al enviar mensajes.
+// Function to send messages
 function sendMessage() {
     var input = $('#messageArea').val();
 
     if(input.trim() != '') {
         var msg = JSON.stringify({from: user, message: input, type: "msg"})
-        //ZAvk3n4NW5
+        // Password of database: ZAvk3n4NW5
         ws.send(msg);
         $('#messageArea').val('');
     } else {
-        //En caso de que el mensaje contenga espacios se vacía el cuadro.
+        // If the messageArea contain only spaces this will return no-spaces.
         $('#messageArea').val('');
     }
 }
@@ -78,7 +85,7 @@ function Autoscroll() {
     scrollbar.scrollTop = scrollbar.scrollHeight;
 }
 
-//Enter = Enviar mensaje && Shift enter = Salto de linea
+// Enter = Send Message && Shift enter = Skip line
 $(function() {
     $("#messageArea").keypress(function(event) {
       var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -92,4 +99,4 @@ $(function() {
         return false;
       }
     });
-  })
+})

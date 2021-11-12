@@ -22,9 +22,10 @@ btnShop.onclick = function() {
   panelContainer.style.display = "block";
   panelMain.style.display = "block";
   panelLogin.style.display = "block";
+  
+  // Begin the machine effect letter.
   $('#typer').html('')
   maquina("typer",texto, 100, 0);
-  console.log("HOLA");
   return;
 }
 
