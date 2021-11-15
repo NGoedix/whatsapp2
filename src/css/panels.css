@@ -121,6 +121,11 @@
     .panelLogin-left {
         width: 50%;
     }
+
+    .hidden-sm {
+        display: none;
+    }
+
 }
 /* End of responsive width */
 
@@ -139,10 +144,6 @@
 @media only screen and (min-height: 721px) {
     #panel {
         top: 30%;
-    }
-
-    .hidden-sm {
-        display: none;
     }
 }
 /* End of responsive height */

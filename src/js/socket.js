@@ -51,14 +51,13 @@ ws.onmessage = (event) => {
         return;
 
     } else {
-        //Mensaje normal
+        // Normal message
         var fromUser = data.from.length > 25 ? (data.from).substr(0, 25) + "..." : data.from;
-        console.log(fromUser + "\n" + user)
         var messageFrom = (data.from).toLowerCase() == user.toLowerCase() ? "message-me" : "message-external";
 
         var scrollbar = document.getElementById('chat-content');
 
-        //Colocar mensaje
+        // Put the message
         var scroll = scrollbar.scrollTop == scrollbar.scrollTopMax ? true : false;
         var content = $('#chat-content').append('<div id="' + messageFrom + '"><p id="' + messageFrom + '-name"> ' + fromUser + ' </p><div id="' + messageFrom + '-content">' + data.message + '</div></div>');
         if(scroll) Autoscroll();
