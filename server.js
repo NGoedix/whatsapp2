@@ -61,7 +61,7 @@ wss.on('connection', (ws, username, localId) => {
     type = data.type
 
     if (type == "login") {
-      //Escape HTML
+      // Escape HTML
       username = data.from.replace(/<[^>]+>/g, '');
       username = data.from.replace(/<\//g, '')
       console.log(username)
@@ -71,7 +71,7 @@ wss.on('connection', (ws, username, localId) => {
         ws.close()
       }
 
-      //Add user to the Users Connected JSON
+      // Add user to the Users Connected JSON
       userData = JSON.stringify({client: ws, id: localId, username: username})  
       users.push(userData);
       
