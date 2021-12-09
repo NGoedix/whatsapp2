@@ -19,7 +19,7 @@ const server = express()
 
 const wss = new Server({ server });
 
-//Identifaction of users
+// Users logs
 let users = [];
 var id = 0;
 var blockLogin = false;

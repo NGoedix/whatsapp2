@@ -1,4 +1,4 @@
-var texto = "Bienvenidos a esta humilde aplicación de mensajería desarrollada por Goedix para el curso de DAM 1. El objetivo de esta aplicación es tener una vía de comunicación en tiempo real con funciones nuevas.";
+var texto = "Bienvenidos a esta humilde aplicación de mensajería desarrollada por Diego para el curso de DAM 1. El objetivo de esta aplicación es tener una vía de comunicación en tiempo real con funciones nuevas.";
 // Panel's list
 var panelMain = document.getElementById("panel");
 var panelContainer = document.getElementById("panel-container");
@@ -14,31 +14,37 @@ var btnRegister = document.getElementById("navRegisterButton");
 var btnShop = document.getElementById("navShopButton");
 var btnProfile = document.getElementById("navProfileButton");
 
-// Button to close the panels
-//var closePanel = document.getElementsByClassName("close")[0];
+var tienesCuenta = document.getElementById("doYouHaveAcc");
+var noTienesCuenta = document.getElementById("notDoYouHaveAcc");
 
 // When the user clicks the button, open the modal 
-btnShop.onclick = function() {
+btnRegister.onclick = () => {
   panelContainer.style.display = "block";
   panelMain.style.display = "block";
-  panelLogin.style.display = "block";
+  panelRegister.style.display = "block";
   
   // Begin the machine effect letter.
   $('#typer').html('')
-  maquina("typer",texto, 100, 0);
+  maquina("typer", texto, 100, 0);
   return;
 }
 
-// When the user clicks on <span> (x), close the modal
-/*closePanel.onclick = function() {
+tienesCuenta.onclick = () => {
+  panelRegister.style.display = "none";
+  panelLogin.style.display = "block";
+}
+
+noTienesCuenta.onclick = () => {
   panelLogin.style.display = "none";
-}*/
+  panelRegister.style.display = "block";
+}
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+window.onclick = (event) => {
   if (event.target == panelContainer) {
     panelContainer.style.display = "none";
     panelMain.style.display = "none";
     panelLogin.style.display = "none";
+    panelRegister.style.display = "none";
   }
 }
