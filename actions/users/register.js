@@ -17,6 +17,7 @@ module.exports = function (wss, client, data) {
     let con = mysql.createConnection({
         host: "remotemysql.com",
         user: "dWKPtIx5xt",
+        port: 3306,
         password: "XJr9IcNrv5",
         database: "dWKPtIx5xt"
     });
@@ -38,6 +39,8 @@ module.exports = function (wss, client, data) {
                     let msg = JSON.stringify({from: 'server', message: 'Ese nombre de usuario no está disponible', type: 'alert'})
                     client.send(msg);
                     return;
+                } else {
+                    console.error(err)
                 }
             }
             let sql = `SELECT idUsuario, nombreUsuario FROM usuario WHERE nombreUsuario = ` + mysql.escape((data.user).toLowerCase()) + ` LIMIT 1`;
@@ -49,6 +52,7 @@ module.exports = function (wss, client, data) {
                         return;
                     }
                 }
+
                 var token = jwt.sign({ id: result.idUsuario, username: data.user }, process.env.PRIVATE_KEY, { expiresIn: '24h' });
 
                 let message = JSON.stringify({from: 'server', id: result.idUsuario, user: data.user, token: token, type: 'registered'})
