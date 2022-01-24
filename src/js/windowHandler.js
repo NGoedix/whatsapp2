@@ -21,12 +21,7 @@ var noTienesCuenta = document.getElementById("notDoYouHaveAcc");
 btnRegister.onclick = () => {
   panelContainer.style.display = "block";
   panelMain.style.display = "block";
-  panelRegister.style.display = "block";
-  
-  // Begin the machine effect letter.
-  $('#typer').html('')
-  maquina("typer", texto, 100, 0);
-  return;
+  panelLogin.style.display = "block";
 }
 
 tienesCuenta.onclick = () => {
@@ -37,6 +32,11 @@ tienesCuenta.onclick = () => {
 noTienesCuenta.onclick = () => {
   panelLogin.style.display = "none";
   panelRegister.style.display = "block";
+  
+  // Begin the machine effect letter.
+  $('#typer').html('')
+  maquina("typer", texto, 100, 0);
+  return;
 }
 
 // When the user clicks anywhere outside of the modal, close it
@@ -47,4 +47,11 @@ window.onclick = (event) => {
     panelLogin.style.display = "none";
     panelRegister.style.display = "none";
   }
+}
+
+function hideAll() {
+  panelContainer.style.display = "none";
+  panelMain.style.display = "none";
+  panelLogin.style.display = "none";
+  panelRegister.style.display = "none";
 }

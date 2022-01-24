@@ -23,13 +23,13 @@
         <div id="panelLogin" style="display: none;">
           <div class="panelLogin">
             <h1>LOGIN</h1>
-            <form action="">
+            <form>
               <span>Nombre de usuario</span>
               <input id="usernameLogin" maxLength="16" type="text" placeholder="Usuario" required>
               <span>Contraseña</span>
               <input id="passwordLogin" maxlength="32" type="password" placeholder="Contraseña" required>
               <br />
-              <input class="logActionBtn signin" type="button" value="Iniciar sesión">
+              <input class="logActionBtn signin" type="button" onclick="loginUser()" value="Iniciar sesión">
             </form>
             <div class="form-links">
               <a href="#"><span>¿Olvidaste la contraseña?</span></a>
@@ -44,13 +44,13 @@
             <h1>REGISTER</h1>
             <form action="">
               <span>Nombre de usuario</span>
-              <input id="usernameLogin" maxLength="16" type="text" placeholder="Usuario" required>
+              <input id="usernameRegister" maxLength="16" type="text" placeholder="Usuario" required>
               <span>Nombre</span>
-              <input id="usernameLogin" maxLength="16" type="text" placeholder="Nombre" required>
+              <input id="nameRegister" maxLength="16" pattern="[a-zA-Z ]" type="text" placeholder="Nombre" required>
               <span>Contraseña</span>
-              <input id="passwordLogin" maxlength="32" type="password" placeholder="Contraseña" required>
+              <input id="passwordRegister" maxlength="32" type="password" placeholder="Contraseña" required>
               <br />
-              <input class="logActionBtn signup" type="button" value="Crear cuenta">
+              <input class="logActionBtn signup" type="button" onclick="registerUser()" value="Crear cuenta">
             </form>
             <div class="form-links">
               <a id="doYouHaveAcc" href="#"><span>¿Tienes cuenta?</span></a>
@@ -73,7 +73,7 @@
       <li><a href="#"><button id="navShopButton" class="btn btn-outline-primary">Tienda</button></a></li>
       <li>
         <img src="icons/user.png" alt="Foto de perfil">
-        <a href="#"><button id="navRegisterButton" class="btn btn-outline-primary">Login / Register</button></a>
+        <a id="logBtn" href="#"><button id="navRegisterButton" class="btn btn-outline-primary">Login / Register</button></a>
       </li>
     </nav>
 
@@ -105,32 +105,30 @@
         <ul id="userList"></ul>
       </div>
     </div>
-    
-    <script>
-      //Esto es temporal hasta que esté a base de datos
-      //Reconocimiento de usuario | Futuramente esto será a través de la base de datos y será mucho más seguro, ahora tiene errores de seguridad.
-      var user = prompt("¿Quién eres?");
-      
-      while (user == null) {
-        user = prompt("Nombre inválido, repite el nick.");
-      }
-
-      user = user.replaceAll(/<[^>]+>/g, '');
-      user = user.replaceAll('</', '')
-      
-      //Check de user not empty FRONT | Futuramente será a través del registro.
-      while(user.trim() == "" || user.search(">") != -1 || user.search("<") != -1 || user.search('"') != -1 || user == null) {
-        user = prompt("Nombre inválido, repite el nick.")
-        user = user.replaceAll(/<[^>]+>/g, '');
-        user = user.replaceAll(/<\//g, '')
-      }
-
-      $('document').ready(function() {
-        var msg = JSON.stringify({from: user, type: "login"})
+  <script>
+    $('document').ready(function() {
+      if (getCookie('user') != '') {
+        var msg = JSON.stringify({from: getCookie('user'), token: getCookie('token'), type: "logToken"})
         ws.send(msg);
-      });
-    </script>
-
+      } else {
+        // Create the message to log in.
+        $('#chat-content').append('<div id="chat-log"><p>DEBES INICIAR SESIÓN</p></div>');
+      }
+    });
+  </script>
+  <script type="text/javascript">
+    localStorage.openpages = Date.now();
+    var onLocalStorageEvent = function(e){
+        if(e.key == "openpages"){
+          localStorage.page_available = Date.now();
+        }
+        if(e.key != "page_available"){
+          ws.close();
+          alert("Se te ha desconectado por abrir otra ventana.");
+        }
+    };
+    window.addEventListener('storage', onLocalStorageEvent, false);
+  </script>
   <script type="text/javascript" src="js/windowHandler.js"></script>
   </body>
 </html>
