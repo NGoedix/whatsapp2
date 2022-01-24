@@ -149,11 +149,11 @@ function registerUser() {
         $('#nameRegister').val('');
         $('#passwordRegister').val('');
     } else {
-        if (passwordInput.length > 8) {
+        if (passwordInput.length <= 8) {
             alert('La contraseña debe tener más de 8 carácteres.')
-        } else if (usernameInput.length > 3) {
+        } else if (usernameInput.length <= 3) {
             alert('El nombre de usuario debe tener más de 3 carácteres.')
-        } else if (nameInput.length > 2) {
+        } else if (nameInput.length <= 2) {
             alert('Los nombres deben tener más de 2 carácteres.')
         } else {
             alert('Las entradas no pueden contener espacios.');
