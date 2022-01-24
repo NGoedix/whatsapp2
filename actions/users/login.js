@@ -12,7 +12,7 @@ module.exports = function (wss, client, data, id) {
         host: "remotemysql.com",
         user: "dWKPtIx5xt",
         password: "XJr9IcNrv5",
-        database: "whatsup"
+        database: "dWKPtIx5xt"
     });
   
     con.connect(function(err) {

@@ -18,7 +18,7 @@ module.exports = function (wss, client, data) {
         host: "remotemysql.com",
         user: "dWKPtIx5xt",
         password: "XJr9IcNrv5",
-        database: "whatsup"
+        database: "dWKPtIx5xt"
     });
 
     con.connect(async function(err) {
