@@ -3,6 +3,7 @@ module.exports = function (wss, from, id) {
   console.log("ID TO KICK: " + id);
   console.log("FROM USER: " + from);
 
+  // TODO Check if the user role is administrator (1) on the DB
   if(from != "goedix123") return;
 
   counter = 0;

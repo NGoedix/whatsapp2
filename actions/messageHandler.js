@@ -5,24 +5,46 @@ var errorAlert = require('../actions/alert/errorAlert')
 
 var sendMessage = require('../actions/messages/sendMessage')
 
-module.exports = function (wss, client, username, data) {
+var register = require('../actions/users/register')
+var login = require('./users/login')
 
-    var type = data.type;
-    
-    console.log(username);
+var validToken = require('./control/validToken')
 
-    if (!type) return;
+var jwt = require('jsonwebtoken');
 
-    if (type == "alert") {      
-      alertClients(wss, data.from, data.message)
+require('dotenv').config();
 
-    } else if (type == "kick") {
-      kickClient(wss, data.from, data.id)
+module.exports = function (wss, client, data) {
 
-    } else if (type == "msg") {
-      sendMessage(wss, username, data.message);
+  let type = data.type;
+  let id = data.id;
+  let token = data.token;
+  if (!type) return;
 
-    } else {
-      errorAlert(client);
-    }
+  let isSame = token && data.from == jwt.verify(token, process.env.PRIVATE_KEY).username;
+  
+  if (type == 'alert') { // { from: "goedix123", message: message, type: "alert" }
+    if (!isSame) return;
+    alertClients(wss, data.from, data.message)
+
+  } else if (type == 'kick') { // { from: "goedix123", id: userId, type: "kick" }
+    if (!isSame) return;
+    kickClient(wss, data.from, id)
+
+  } else if (type == 'msg') { // { from: user, message: message, type: "msg" }
+    if (!isSame) return;
+    sendMessage(wss, data.from, data.message);
+
+  } else if (type == 'register') {
+    register(wss, client, data.message);
+
+  } else if (type == 'logToken') {
+    validToken(wss, client, data.from, data.token);
+
+  } else if (type == 'login') {
+    login(wss, client, data.message, id);
+
+  } else {
+    errorAlert(client); // Send error if not match correct type
+  }
 }
