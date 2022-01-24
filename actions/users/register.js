@@ -9,7 +9,7 @@ const sendLogin = require('../messages/sendLogin');
 
 module.exports = async function (wss, client, data) {
 
-    if (!(/[a-zA-Z\d._-]/.test(data.user))) {
+    if (!(/[a-zA-Z\d._-]/.test(data.user)) || !(/[\u{1f300}-\u{1f5ff}]/.test(data.user)) || !(/[\u{2500}-\u{2BEF}]/.test(data.user)) || !(/[\u{1f600}-\u{1f64f}]/.test(data.user)) || !(/[\u{2702}-\u{27b0}]/.test(data.user))) {
         let msg = JSON.stringify({from: 'server', message: 'El nombre de usuario no cumple con los requisitos', type: 'alert'})
         client.send(msg);
         return;
