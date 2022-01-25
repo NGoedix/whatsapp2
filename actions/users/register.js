@@ -9,7 +9,10 @@ const sendLogin = require('../messages/sendLogin');
 
 module.exports = async function (wss, client, data) {
 
-    if (!(/[a-zA-Z\d._-]/.test(data.user))) {
+    let user = crypt.encode(data.user);
+    let name = crypt.encode(data.name);
+
+    if (!(/[a-zA-Z\d._-]/.test(user))) {
         let msg = JSON.stringify({from: 'server', message: 'El nombre de usuario no cumple con los requisitos', type: 'alert'})
         client.send(msg);
         return;
@@ -18,7 +21,7 @@ module.exports = async function (wss, client, data) {
     let hash = await crypt.hashPassword(data.password);
     
     let sql = `INSERT INTO usuario (nombreUsuario, nombre, password) VALUES ?`;
-    let values = [[(data.user).toLowerCase(), data.name, hash]]
+    let values = [[user.toLowerCase(), name, hash]]
     SQLControl.connection.query(sql, [values], function (err) {
         if (err) {
             if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -33,7 +36,7 @@ module.exports = async function (wss, client, data) {
                 console.error(err)
             }
         }
-        let sql = `SELECT idUsuario, nombreUsuario FROM usuario WHERE nombreUsuario = ` + mysql.escape((data.user).toLowerCase()) + ` LIMIT 1`;
+        let sql = `SELECT idUsuario, nombreUsuario FROM usuario WHERE nombreUsuario = ` + mysql.escape(user.toLowerCase()) + ` LIMIT 1`;
         SQLControl.connection.query(sql, (err, [result]) => {
             if (err) {
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -43,12 +46,12 @@ module.exports = async function (wss, client, data) {
                 }
             }
 
-            var token = jwt.sign({ id: result.idUsuario, username: data.user }, process.env.PRIVATE_KEY, { expiresIn: '24h' });
+            var token = jwt.sign({ id: result.idUsuario, username: crypt.decode(user) }, process.env.PRIVATE_KEY, { expiresIn: '24h' });
 
-            let message = JSON.stringify({from: 'server', id: result.idUsuario, user: data.user, token: token, type: 'registered'})
+            let message = JSON.stringify({from: 'server', id: result.idUsuario, user: crypt.decode(user), token: token, type: 'registered'})
             client.send(message);
-            sendLogin(wss, data.user, result.idUsuario);
-            server.addUser(client, result.idUsuario, result.nombreUsuario);
+            sendLogin(wss, crypt.decode(user), result.idUsuario);
+            server.addUser(client, result.idUsuario, crypt.decode(result.nombreUsuario));
 
         })
     });
